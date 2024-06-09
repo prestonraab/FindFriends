@@ -28,8 +28,8 @@ if 'location' not in st.session_state:
 def frequent_get_location():
     st.session_state['iter'] += 1
     iter = st.session_state['iter']
-    streamlit_js_eval.get_geolocation(f"location{iter}")
-    location = streamlit_js_eval.get_geolocation(f"location{iter - 4}")
+    # streamlit_js_eval.get_geolocation(f"location{iter + 4}")
+    location = streamlit_js_eval.get_geolocation(f"location{iter}")
     if location:
         st.session_state['location'] = location
     st.write(st.session_state['location'])
