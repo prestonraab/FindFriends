@@ -34,11 +34,11 @@ def frequent_get_location():
     st.write(streamlit_js_eval.get_geolocation(3))
     st.write(streamlit_js_eval.get_geolocation(4))
     st.write(streamlit_js_eval.get_geolocation(5))
-    location = streamlit_js_eval.get_geolocation('seven')
+    location = streamlit_js_eval.get_geolocation()
     if location:
         st.session_state['location'] = location
     st.write(st.session_state['location'])
 
 
-get_location = st.experimental_fragment(frequent_get_location, run_every=1)
+get_location = st.experimental_fragment(frequent_get_location, run_every=2)
 get_location()
