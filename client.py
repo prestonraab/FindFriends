@@ -13,7 +13,7 @@ if not name:
   st.warning('Please input a name.')
   st.stop()
 
-location = {}
+location = {'latitude': None}
 location_update = {}
 
 @st.experimental_fragment(**location_update)
