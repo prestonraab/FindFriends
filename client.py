@@ -13,8 +13,14 @@ if not name:
   st.warning('Please input a name.')
   st.stop()
 
+location = {}
 
-location = streamlit_geolocation()
+
+@st.experimental_fragment(run_every=1)
+def get_location():
+    global location
+    location = streamlit_geolocation()
+
 
 if not location['latitude']:
   st.warning('You have not given access to your location.')
