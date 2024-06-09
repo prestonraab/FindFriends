@@ -14,9 +14,6 @@ location = streamlit_geolocation()
 st.write(location)
 
 with st.form("my_form"):
-   name = st.chat_input("What is your name?")
-   password = st.chat_input("Enter a word you will remember, or password if you like.")
-
    slider_val = st.slider("Form slider")
    checkbox_val = st.checkbox("Form checkbox")
 
