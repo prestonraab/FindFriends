@@ -16,6 +16,7 @@ if not name:
 
 location = streamlit_geolocation()
 
+st.write(location)
 
 if not location['latitute']:
   st.warning('You have not given access to your location.')
