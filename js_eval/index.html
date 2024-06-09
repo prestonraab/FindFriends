@@ -61,10 +61,6 @@
                 },
                 (error) => {
                   console.error('Error watching position:', error);
-                },
-                {
-                  enableHighAccuracy: true,
-                  maximumAge: 0
                 }
         );
       }
@@ -72,10 +68,10 @@
       // Function to get the most recent location
       function getLatestLocation() {
           if (latestLocation) {
-              return Promise.resolve(latestLocation);
+              return latestLocation;
           } else {
               console.warn('No location available yet.');
-              return Promise.resolve(null);
+              return null;
           }
       }
 
