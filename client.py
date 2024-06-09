@@ -33,8 +33,7 @@ if 'location' not in st.session_state:
 def frequent_get_location():
     global location
     location = streamlit_js_eval.get_geolocation()
-    if location['latitude']:
-        st.session_state['location'] = location
+    st.session_state['location'] = location
     st.write(location)
 
 get_location = st.experimental_fragment(frequent_get_location, run_every=1)
