@@ -6,11 +6,39 @@
       let latestLocation = {'hello': "7"};
 
       // Function to start watching the location
-      function startWatchingLocation() {
+      function getLocation() {
         if (!navigator.geolocation) {
             console.error('Browser does not support geolocation!');
             return;
         }
+
+        // Start watching the location
+        return navigator.geolocation.getCurrentPosition(
+            (position) => {
+                // Update the global variable with the latest position
+                latestLocation = {
+                    coords: {
+                        accuracy: position.coords.accuracy,
+                        altitude: position.coords.altitude,
+                        altitudeAccuracy: position.coords.altitudeAccuracy,
+                        heading: position.coords.heading,
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        speed: position.coords.speed,
+                    },
+                    timestamp: position.timestamp,
+                };
+                console.log('Location updated:', latestLocation);
+            },
+            (error) => {
+                console.error('Error watching position:', error);
+            },
+            {
+                enableHighAccuracy: true,
+                maximumAge: 0
+            }
+        );
+      }
 
         // Start watching the location
         const watchId = navigator.geolocation.watchPosition(

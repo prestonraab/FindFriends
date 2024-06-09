@@ -24,7 +24,7 @@ if not name:
   st.stop()
 
 if 'location' not in st.session_state:
-    location = js_eval.get_latest_location()
+    location = js_eval.get_
     if location:
         st.session_state['iter'] = 0
         st.session_state['location'] = location

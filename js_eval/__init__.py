@@ -54,6 +54,12 @@ def get_latest_location(component_key=None):
     return streamlit_js_eval(js_expressions=js_text, key = component_key)
 
 
+def get_first_location(component_key=None):
+    js_text = 'getLocation()'
+    if component_key is None: component_key = js_text
+    return streamlit_js_eval(js_expressions=js_text, key = component_key)
+
+
 def get_browser_language(component_key=None):
     if component_key is None: component_key='LANG'
     return streamlit_js_eval(js_expressions=f'window.navigator.language', key = component_key)
