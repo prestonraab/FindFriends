@@ -18,6 +18,7 @@ location = {'latitude': None}
 def normal_get_location():
     global location
     location = streamlit_geolocation()
+    st.write(location)
 
 
 get_location = st.experimental_fragment(normal_get_location, run_every=1)
@@ -28,7 +29,6 @@ if not location['latitude']:
   st.warning('You have not given access to your location.')
   st.stop()
 
-st.write(location)
 
 location_update_freq = 1
 location_update = {'run_every' : location_update_freq}
