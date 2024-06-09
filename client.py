@@ -26,16 +26,15 @@ if 'location' not in st.session_state:
 iter = 1
 
 def frequent_get_location():
+    location = js_eval.get_latest_location()
+    st.write(location)
+
     global iter
     iter += 1
-    location = js_eval.get_latest_location()
     st.write(iter)
-    st.write(st.session_state['location'])
-    if location:
-        st.session_state['location'] = location
-    else:
-        location = js_eval.get_first_location()
-        st.write(location)
+
+    location = js_eval.get_first_location()
+    st.write(location)
 
 
 get_location = st.experimental_fragment(frequent_get_location, run_every=1)
