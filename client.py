@@ -14,14 +14,13 @@ if not name:
   st.stop()
 
 location = {'latitude': None}
-location_update = {}
 
 def normal_get_location():
     global location
     location = streamlit_geolocation()
 
 
-get_location = st.experimental_fragment(normal_get_location, **location_update)
+get_location = st.experimental_fragment(normal_get_location, run_every=1)
 get_location()
 
 
