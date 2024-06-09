@@ -10,17 +10,18 @@ with st.form("my_form"):
    if submitted:
        st.write("name", name)
 
-if not name:
-  st.warning('Please input a name.')
-  st.stop()
 
 if 'watching' not in st.session_state:
     sucess = js_eval.start_watching_location()
     if sucess:
         st.session_state['watching'] = True
+        st.write("Watch succeeded")
     else:
         st.write("Watch failed")
 
+if not name:
+  st.warning('Please input a name.')
+  st.stop()
 
 if 'location' not in st.session_state:
     location = js_eval.get_latest_location()
