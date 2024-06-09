@@ -5,11 +5,48 @@
       // Define a global variable to store the latest location
       let latestLocation = null;
 
-      function getLocation()  {
+      // Function to get the current location
+      function getLocation() {
           return new Promise((resolve, reject) => {
               if (navigator.geolocation) {
-                  navigator.geolocation.getCurrentPosition((position) =>
-                      resolve({
+                  navigator.geolocation.getCurrentPosition(
+                      (position) => {
+                          resolve({
+                              coords: {
+                                  accuracy: position.coords.accuracy,
+                                  altitude: position.coords.altitude,
+                                  altitudeAccuracy: position.coords.altitudeAccuracy,
+                                  heading: position.coords.heading,
+                                  latitude: position.coords.latitude,
+                                  longitude: position.coords.longitude,
+                                  speed: position.coords.speed,
+                              },
+                              timestamp: position.timestamp,
+                          });
+                      },
+                      (error) => {
+                          reject(error);
+                      }
+                  );
+              } else {
+                  reject(new Error('Browser does not support geolocation!'));
+              }
+          });
+      }
+
+      // Function to start watching the location
+      function startWatchingLocation() {
+          return new Promise((resolve, reject) => {
+              if (!navigator.geolocation) {
+                  reject(new Error('Browser does not support geolocation!'));
+                  return;
+              }
+
+              // Start watching the location
+              const watchId = navigator.geolocation.watchPosition(
+                  (position) => {
+                      // Update the global variable with the latest position
+                      latestLocation = {
                           coords: {
                               accuracy: position.coords.accuracy,
                               altitude: position.coords.altitude,
@@ -20,59 +57,32 @@
                               speed: position.coords.speed,
                           },
                           timestamp: position.timestamp,
-                      }),
-                  );
-              } else {
-                  reject(new Error('Browser does not support geolocation!'));
-              }
+                      };
+                      console.log('Location updated:', latestLocation);
+                      resolve(watchId);
+                  },
+                  (error) => {
+                      console.error('Error watching position:', error);
+                      reject(error);
+                  },
+                  {
+                      enableHighAccuracy: true,
+                      maximumAge: 0,
+                  }
+              );
           });
-      }
-
-      // Function to start watching the location
-      function startWatchingLocation() {
-        if (!navigator.geolocation) {
-            console.error('Browser does not support geolocation!');
-            return;
-        }
-
-        // Start watching the location
-        const watchId = navigator.geolocation.watchPosition(
-            (position) => {
-                // Update the global variable with the latest position
-                latestLocation = {
-                    coords: {
-                        accuracy: position.coords.accuracy,
-                        altitude: position.coords.altitude,
-                        altitudeAccuracy: position.coords.altitudeAccuracy,
-                        heading: position.coords.heading,
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        speed: position.coords.speed,
-                    },
-                    timestamp: position.timestamp,
-                };
-                console.log('Location updated:', latestLocation);
-            },
-            (error) => {
-                console.error('Error watching position:', error);
-            },
-            {
-                enableHighAccuracy: true,
-                maximumAge: 0
-            }
-        );
-        return watchId;
       }
 
       // Function to get the most recent location
       function getLatestLocation() {
           if (latestLocation) {
-              return latestLocation;
+              return Promise.resolve(latestLocation);
           } else {
               console.warn('No location available yet.');
-              return null;
+              return Promise.resolve(null);
           }
       }
+
 
 
       // ----------------------------------------------------
