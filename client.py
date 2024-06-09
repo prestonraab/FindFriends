@@ -14,9 +14,12 @@ if not name:
   st.warning('Please input a name.')
   st.stop()
 
+if 'watching' not in st.session_state:
+    js_eval.start_watching_location()
+    st.session_state['watching'] = True
+
 
 if 'location' not in st.session_state:
-    js_eval.start_watching_location()
     location = js_eval.get_latest_location()
     if location:
         st.session_state['iter'] = 0
