@@ -28,7 +28,7 @@ st.write(location.values())
 
 st.write('latitude' in location)
 
-if not location.latitude:
+if not location['latitude']:
   st.warning('You have not given access to your location.')
   st.stop()
 else:
