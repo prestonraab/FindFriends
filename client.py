@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_geolocation import streamlit_geolocation
+import streamlit_js_eval
 
 with st.form("my_form"):
    name = st.text_input('username')
@@ -28,11 +29,17 @@ if 'location' not in st.session_state:
     st.warning('You have not given access to your location.')
     st.stop()
 
+def frequent_get_location():
+    global location
+    location = streamlit_js_eval.get_geolocation()
+    if location['latitude']:
+        st.session_state['location'] = location
+    st.write(location)
 
 location_update_freq = 1
 location_update = {'run_every' : location_update_freq}
 
-get_location = st.experimental_fragment(normal_get_location, run_every=1)
+get_location = st.experimental_fragment(frequent_get_location, run_every=1)
 get_location()
 
 st.write(st.session_state['location'])
