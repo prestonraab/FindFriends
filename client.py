@@ -29,8 +29,12 @@ def frequent_get_location():
     st.session_state['iter'] += 1
     iter = st.session_state['iter']
     # streamlit_js_eval.get_geolocation(f"location{iter + 4}")
-    location = streamlit_js_eval.get_geolocation()
-    location = streamlit_js_eval.get_geolocation(iter)
+    st.write(streamlit_js_eval.get_geolocation(1))
+    st.write(streamlit_js_eval.get_geolocation(2))
+    st.write(streamlit_js_eval.get_geolocation(3))
+    st.write(streamlit_js_eval.get_geolocation(4))
+    st.write(streamlit_js_eval.get_geolocation(5))
+    location = streamlit_js_eval.get_geolocation('seven')
     if location:
         st.session_state['location'] = location
     st.write(st.session_state['location'])
