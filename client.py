@@ -34,10 +34,10 @@ def frequent_get_location():
     global location
     st.session_state['iter'] += 1
     iter = st.session_state['iter']
-    location = streamlit_js_eval.get_geolocation(f"location{iter}")
+    location = streamlit_js_eval.get_geolocation(f"location")
     if location:
         st.session_state['location'] = location
     st.write(st.session_state['location'])
 
-get_location = st.experimental_fragment(frequent_get_location, run_every=4)
+get_location = st.experimental_fragment(frequent_get_location, run_every=2)
 get_location()
