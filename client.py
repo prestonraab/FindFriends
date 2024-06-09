@@ -20,6 +20,7 @@ def normal_get_location():
     global location
     location = streamlit_js_eval.get_geolocation()
     if location:
+        st.session_state['iter'] = 1
         st.session_state['location'] = location
         st.rerun()
 
@@ -31,7 +32,9 @@ if 'location' not in st.session_state:
 
 def frequent_get_location():
     global location
-    location = streamlit_js_eval.get_geolocation()
+    st.session_state['iter'] += 1
+    iter = st.session_state['iter']
+    location = streamlit_js_eval.get_geolocation(f"location{iter}")
     st.session_state['location'] = location
     st.write(location)
 
