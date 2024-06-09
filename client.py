@@ -14,24 +14,13 @@ def get_first_location():
 # Function to update the location
 def frequent_get_location():
     location = js_eval.get_latest_location()
-    st.session_state['location'] = location
-    st.write(location)
-
-with st.form("my_form"):
-   name = st.text_input('username')
-
-   # Every form must have a submit button.
-   submitted = st.form_submit_button("Submit")
-   if submitted:
-       st.write("name", name)
+    if location:
+        st.session_state['location'] = location
+    st.write(st.session_state['location'])
 
 if 'watching' not in st.session_state:
     start_watching_location()
     st.session_state['watching'] = True
-
-if not name:
-    st.warning('Please input a name.')
-    st.stop()
 
 if 'location' not in st.session_state:
     get_first_location()
