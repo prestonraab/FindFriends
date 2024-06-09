@@ -28,7 +28,8 @@ def frequent_get_location():
     if location:
         st.session_state['location'] = location
     else:
-        st.write(st.session_state['location'])
+        location = js_eval.get_first_location()
+        st.write(location)
 
 
 get_location = st.experimental_fragment(frequent_get_location, run_every=1)
