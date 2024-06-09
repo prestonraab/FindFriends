@@ -23,7 +23,6 @@ if not name:
   st.warning('Please input a name.')
   st.stop()
 
-location = streamlit_geolocation()
 
 if 'location' not in st.session_state:
     location = js_eval.get_first_location()
