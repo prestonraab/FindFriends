@@ -16,12 +16,12 @@ if not name:
 location = {'latitude': None}
 location_update = {}
 
-@st.experimental_fragment(**location_update)
-def get_location():
+def normal_get_location():
     global location
     location = streamlit_geolocation()
 
 
+get_location = st.experimental_fragment(normal_get_location, **location_update)
 get_location()
 
 
@@ -33,6 +33,6 @@ st.write(location)
 
 location_update_freq = 1
 location_update = {'run_every' : location_update_freq}
-get_location()
 
+get_location = st.experimental_fragment(normal_get_location, **location_update)
 
