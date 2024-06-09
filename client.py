@@ -14,9 +14,9 @@ if not name:
   st.stop()
 
 location = {}
+location_update = {}
 
-
-@st.experimental_fragment(run_every=1)
+@st.experimental_fragment(**location_update)
 def get_location():
     global location
     location = streamlit_geolocation()
@@ -25,7 +25,10 @@ def get_location():
 if not location['latitude']:
   st.warning('You have not given access to your location.')
   st.stop()
-else:
-    st.write(location)
+
+st.write(location)
+
+location_update_freq = 1
+location_update = {'run_every' : location_update_freq}
 
 
