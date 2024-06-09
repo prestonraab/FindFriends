@@ -5,7 +5,7 @@
       // Define a global variable to store the latest location
       let latestLocation = {'hello': "7"};
 
-      // Function to start watching the location
+
       function getLocation() {
         if (!navigator.geolocation) {
             console.error('Browser does not support geolocation!');
@@ -32,10 +32,6 @@
             },
             (error) => {
                 console.error('Error watching position:', error);
-            },
-            {
-                enableHighAccuracy: true,
-                maximumAge: 0
             }
         );
       }
