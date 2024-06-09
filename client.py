@@ -11,13 +11,13 @@ with st.form("my_form"):
        st.write("name", name)
 
 
-if 'watching' not in st.session_state:
-    sucess = js_eval.start_watching_location()
-    if sucess:
-        st.session_state['watching'] = True
-        st.write("Watch succeeded")
-    else:
-        st.write("Watch failed")
+# if 'watching' not in st.session_state:
+#     sucess = js_eval.start_watching_location()
+#     if sucess:
+#         st.session_state['watching'] = True
+#         st.write("Watch succeeded")
+#     else:
+#         st.write("Watch failed")
 
 if not name:
   st.warning('Please input a name.')
