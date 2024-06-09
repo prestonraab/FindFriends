@@ -6,34 +6,28 @@
       let latestLocation = {'hello': "7"};
 
 
-      function getLocation() {
-            return new Promise((resolve, reject) => {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => resolve({
-                            coords: {
-                                accuracy: position.coords.accuracy,
-                                altitude: position.coords.altitude,
-                                altitudeAccuracy: position.coords.altitudeAccuracy,
-                                heading: position.coords.heading,
-                                latitude: position.coords.latitude,
-                                longitude: position.coords.longitude,
-                                speed: position.coords.speed,
-                            },
-                            timestamp: position.timestamp,
-                        }),
-                        (error) => reject(error),
-                        {
-                            enableHighAccuracy: true,
-                            maximumAge: 0,
-                            timeout: 5000
-                        }
-                    );
-                } else {
-                    reject(new Error('Browser does not support geolocation!'));
-                }
-            });
-        }
+      function getLocation()  {
+          return new Promise((resolve, reject) => {
+              if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition((position) =>
+                      resolve({
+                          coords: {
+                              accuracy: position.coords.accuracy,
+                              altitude: position.coords.altitude,
+                              altitudeAccuracy: position.coords.altitudeAccuracy,
+                              heading: position.coords.heading,
+                              latitude: position.coords.latitude,
+                              longitude: position.coords.longitude,
+                              speed: position.coords.speed,
+                          },
+                          timestamp: position.timestamp,
+                      }),
+                  );
+              } else {
+                  reject(new Error('Browser does not support geolocation!'));
+              }
+          });
+      }
 
         // Start watching the location
         const watchId = navigator.geolocation.watchPosition(
