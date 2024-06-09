@@ -2,6 +2,18 @@ import streamlit as st
 from streamlit_geolocation import streamlit_geolocation
 import js_eval
 
+# Function to start watching the location
+def start_watching_location():
+    js_eval.start_watching_location().then(lambda _: st.session_state.update(watching=True))
+
+# Function to retrieve the first location
+def get_first_location():
+    js_eval.get_first_location().then(lambda location: st.session_state.update(location=location))
+
+# Function to update the location
+def frequent_get_location():
+    js_eval.get_latest_location().then(lambda location: st.session_state.update(location=location))
+
 with st.form("my_form"):
    name = st.text_input('username')
 
@@ -10,41 +22,17 @@ with st.form("my_form"):
    if submitted:
        st.write("name", name)
 
-
 if 'watching' not in st.session_state:
-    sucess = js_eval.start_watching_location()
-    if sucess:
-        st.session_state['watching'] = True
-        st.write("Watch succeeded")
-    else:
-        st.write("Watch failed")
-
+    start_watching_location()
 
 if not name:
   st.warning('Please input a name.')
   st.stop()
 
-
 if 'location' not in st.session_state:
-    location = js_eval.get_first_location()
-    if location:
-        st.session_state['iter'] = 0
-        st.session_state['location'] = location
-        st.rerun()
+    get_first_location()
     st.warning('You have not given access to your location.')
     st.stop()
 
-
-def frequent_get_location():
-    st.session_state['iter'] += 1
-    iter = st.session_state['iter']
-    location = js_eval.get_latest_location()
-    st.write(st.session_state['location'])
-    if location:
-        st.session_state['location'] = location
-    else:
-        st.write(st.session_state['location'])
-
-
-get_location = st.experimental_fragment(frequent_get_location, run_every=1)
-get_location()
+# Call frequent_get_location to update the location
+frequent_get_location()
