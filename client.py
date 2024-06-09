@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_geolocation import streamlit_geolocation
-import streamlit_js_eval
+import js_eval
 
 with st.form("my_form"):
    name = st.text_input('username')
@@ -16,7 +16,7 @@ if not name:
 
 
 if 'location' not in st.session_state:
-    location = streamlit_js_eval.get_geolocation()
+    location = js_eval.get_geolocation()
     if location:
         st.session_state['iter'] = 0
         st.session_state['location'] = location
@@ -28,7 +28,7 @@ if 'location' not in st.session_state:
 def frequent_get_location():
     st.session_state['iter'] += 1
     iter = st.session_state['iter']
-    location = streamlit_js_eval.get_geolocation()
+    location = js_eval.get_geolocation()
     if location:
         st.write(st.session_state['location'])
         # st.session_state['location'] = location
