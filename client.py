@@ -11,6 +11,7 @@ if 'watching' not in st.session_state:
     else:
         st.write("Watch failed")
 
+streamlit_geolocation()
 
 
 if 'location' not in st.session_state:
