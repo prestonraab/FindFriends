@@ -1,14 +1,5 @@
 import streamlit as st
-import geocoder
 from streamlit_geolocation import streamlit_geolocation
-
-st.write("""
-Testing
-""")
-
-g = geocoder.ip('me')
-st.write(g.latlng)
-
 
 with st.form("my_form"):
    name = st.text_input('username')
@@ -31,5 +22,5 @@ if not location['latitute']:
   st.stop()
 else:
     st.write(location)
-    
+
 
