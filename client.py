@@ -21,7 +21,7 @@ def normal_get_location():
     st.write(location)
 
 
-get_location = st.experimental_fragment(normal_get_location, run_every=1)
+get_location = st.experimental_fragment(normal_get_location)
 get_location()
 
 
@@ -33,5 +33,5 @@ if not location['latitude']:
 location_update_freq = 1
 location_update = {'run_every' : location_update_freq}
 
-get_location = st.experimental_fragment(normal_get_location, **location_update)
+get_location = st.experimental_fragment(normal_get_location, run_every=1)
 
