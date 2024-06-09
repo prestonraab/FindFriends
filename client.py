@@ -22,6 +22,10 @@ def normal_get_location():
     # if 'latitude' in location and location['latitude']:
     #     st.session_state['location'] = location
     st.write(location)
+    if not location:
+        st.write("Not here")
+    else:
+        st.write(dir(location))
 
 
 if 'location' not in st.session_state:
