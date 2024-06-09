@@ -34,7 +34,7 @@ def frequent_get_location():
     global location
     st.session_state['iter'] += 1
     iter = st.session_state['iter']
-    location = streamlit_js_eval.get_geolocation(f"location{iter}")
+    location = streamlit_js_eval.get_geolocation(f"location{iter // 4}")
     st.session_state['location'] = location
     st.write(location)
 
