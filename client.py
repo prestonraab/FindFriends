@@ -16,18 +16,6 @@ if not name:
 
 location = streamlit_geolocation()
 
-st.write(location)
-
-st.write(dir(location))
-
-st.write(location.items())
-
-st.write(location.keys())
-
-st.write(location.values())
-
-st.write('latitude' in location)
-
 if not location['latitude']:
   st.warning('You have not given access to your location.')
   st.stop()
