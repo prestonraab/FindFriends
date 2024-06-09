@@ -7,34 +7,33 @@
 
 
       function getLocation() {
-        if (!navigator.geolocation) {
-            console.error('Browser does not support geolocation!');
-            return;
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => resolve({
+                            coords: {
+                                accuracy: position.coords.accuracy,
+                                altitude: position.coords.altitude,
+                                altitudeAccuracy: position.coords.altitudeAccuracy,
+                                heading: position.coords.heading,
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                speed: position.coords.speed,
+                            },
+                            timestamp: position.timestamp,
+                        }),
+                        (error) => reject(error),
+                        {
+                            enableHighAccuracy: true,
+                            maximumAge: 0,
+                            timeout: 5000
+                        }
+                    );
+                } else {
+                    reject(new Error('Browser does not support geolocation!'));
+                }
+            });
         }
-
-        // Start watching the location
-        return navigator.geolocation.getCurrentPosition(
-            (position) => {
-                // Update the global variable with the latest position
-                latestLocation = {
-                    coords: {
-                        accuracy: position.coords.accuracy,
-                        altitude: position.coords.altitude,
-                        altitudeAccuracy: position.coords.altitudeAccuracy,
-                        heading: position.coords.heading,
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        speed: position.coords.speed,
-                    },
-                    timestamp: position.timestamp,
-                };
-                console.log('Location updated:', latestLocation);
-            },
-            (error) => {
-                console.error('Error watching position:', error);
-            }
-        );
-      }
 
         // Start watching the location
         const watchId = navigator.geolocation.watchPosition(
