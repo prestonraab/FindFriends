@@ -15,8 +15,11 @@ if not name:
   st.stop()
 
 if 'watching' not in st.session_state:
-    js_eval.start_watching_location()
-    st.session_state['watching'] = True
+    sucess = js_eval.start_watching_location()
+    if sucess:
+        st.session_state['watching'] = True
+    else:
+        st.write("Watch failed")
 
 
 if 'location' not in st.session_state:

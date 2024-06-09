@@ -64,7 +64,7 @@
       function startWatchingLocation() {
         if (!navigator.geolocation) {
             console.error('Browser does not support geolocation!');
-            return;
+            return null;
         }
 
         // Start watching the location
@@ -95,6 +95,7 @@
             }
 
         );
+        return "success";
       }
 
       // Function to get the most recent location
