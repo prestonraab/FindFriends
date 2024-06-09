@@ -1,3 +1,0 @@
-geocoder
-streamlit-geolocation
-streamlit-js-eval
