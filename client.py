@@ -23,8 +23,12 @@ if 'location' not in st.session_state:
     st.stop()
 
 
+iter = 1
+
 def frequent_get_location():
+    global iter
     location = js_eval.get_latest_location()
+    st.write(iter)
     st.write(st.session_state['location'])
     if location:
         st.session_state['location'] = location
