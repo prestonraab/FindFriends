@@ -27,6 +27,7 @@ iter = 1
 
 def frequent_get_location():
     global iter
+    iter += 1
     location = js_eval.get_latest_location()
     st.write(iter)
     st.write(st.session_state['location'])
