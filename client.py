@@ -33,5 +33,6 @@ st.write(location)
 
 location_update_freq = 1
 location_update = {'run_every' : location_update_freq}
+get_location()
 
 
