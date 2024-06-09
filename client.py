@@ -38,9 +38,9 @@ def frequent_get_location():
     st.session_state['iter'] += 1
     iter = st.session_state['iter']
     location = js_eval.get_latest_location()
+    st.write(st.session_state['location'])
     if location:
-        st.write(st.session_state['location'])
-        # st.session_state['location'] = location
+        st.session_state['location'] = location
     else:
         st.write(st.session_state['location'])
 
