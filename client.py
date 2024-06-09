@@ -18,7 +18,7 @@ if not name:
 if 'location' not in st.session_state:
     location = streamlit_js_eval.get_geolocation()
     if location:
-        st.session_state['iter'] = 1
+        st.session_state['iter'] = 0
         st.session_state['location'] = location
         st.rerun()
     st.warning('You have not given access to your location.')
@@ -28,12 +28,8 @@ if 'location' not in st.session_state:
 def frequent_get_location():
     st.session_state['iter'] += 1
     iter = st.session_state['iter']
-    # streamlit_js_eval.get_geolocation(f"location{iter + 4}")
-    st.write(streamlit_js_eval.get_geolocation(1))
-    st.write(streamlit_js_eval.get_geolocation(2))
-    st.write(streamlit_js_eval.get_geolocation(3))
-    st.write(streamlit_js_eval.get_geolocation(4))
-    st.write(streamlit_js_eval.get_geolocation(5))
+    for i in range(iter):
+        streamlit_js_eval.get_geolocation(f"location{iter + 4}")
     location = streamlit_js_eval.get_geolocation()
     if location:
         st.session_state['location'] = location
