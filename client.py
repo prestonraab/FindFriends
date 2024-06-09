@@ -15,6 +15,7 @@ def get_first_location():
 def frequent_get_location():
     location = js_eval.get_latest_location()
     st.session_state['location'] = location
+    st.write(location)
 
 with st.form("my_form"):
    name = st.text_input('username')
