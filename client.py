@@ -21,6 +21,7 @@ def normal_get_location():
     location = streamlit_geolocation()
     if location['latitude']:
         st.session_state['location'] = location
+        st.rerun()
     st.write(location)
 
 
@@ -35,9 +36,6 @@ def frequent_get_location():
     if location['latitude']:
         st.session_state['location'] = location
     st.write(location)
-
-location_update_freq = 1
-location_update = {'run_every' : location_update_freq}
 
 get_location = st.experimental_fragment(frequent_get_location, run_every=1)
 get_location()
