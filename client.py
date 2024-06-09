@@ -34,7 +34,6 @@ def frequent_get_location():
         st.session_state['location'] = location
     st.write(st.session_state['location'])
 
-frequent_get_location()
 
-# get_location = st.experimental_fragment(frequent_get_location)
-# get_location()
+get_location = st.experimental_fragment(frequent_get_location)
+get_location()
