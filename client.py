@@ -19,9 +19,8 @@ location = {'latitude': None}
 def normal_get_location():
     global location
     location = streamlit_js_eval.get_geolocation()
-    if 'latitude' in location and location['latitude']:
-        st.session_state['location'] = location
-        st.rerun()
+    # if 'latitude' in location and location['latitude']:
+    #     st.session_state['location'] = location
     st.write(location)
 
 
