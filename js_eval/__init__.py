@@ -40,10 +40,18 @@ def copy_to_clipboard(copiedText, linkText, successText, component_key=None):
 def bootstrapButton(title,component_key=None):
     return streamlit_js_eval(js_expressions=f"bsButton('{title}')", key=component_key if component_key is not None else title)
 
-def get_geolocation(component_key=None):
-    js_text = 'getLocation()' 
-    if component_key is None: component_key=js_text
+
+def start_watching_location(component_key=None):
+    js_text = 'startWatchingLocation()'
+    if component_key is None: component_key = js_text
     return streamlit_js_eval(js_expressions=js_text, key = component_key)
+
+
+def get_latest_location(component_key=None):
+    js_text = 'getLatestLocation()'
+    if component_key is None: component_key = js_text
+    return streamlit_js_eval(js_expressions=js_text, key = component_key)
+
 
 def get_browser_language(component_key=None):
     if component_key is None: component_key='LANG'

@@ -16,7 +16,8 @@ if not name:
 
 
 if 'location' not in st.session_state:
-    location = js_eval.get_geolocation()
+    js_eval.start_watching_location()
+    location = js_eval.get_latest_location()
     if location:
         st.session_state['iter'] = 0
         st.session_state['location'] = location
@@ -28,7 +29,7 @@ if 'location' not in st.session_state:
 def frequent_get_location():
     st.session_state['iter'] += 1
     iter = st.session_state['iter']
-    location = js_eval.get_geolocation()
+    location = js_eval.get_latest_location()
     if location:
         st.write(st.session_state['location'])
         # st.session_state['location'] = location
