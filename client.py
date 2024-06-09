@@ -14,14 +14,16 @@ location = streamlit_geolocation()
 st.write(location)
 
 with st.form("my_form"):
-   slider_val = st.slider("Form slider")
-   checkbox_val = st.checkbox("Form checkbox")
+   name = st.text_input('Name')
 
    # Every form must have a submit button.
    submitted = st.form_submit_button("Submit")
    if submitted:
-       st.write("slider", slider_val, "checkbox", checkbox_val)
+       st.write("name", name)
+
+if not name:
+  st.warning('Please input a name.')
+  st.stop()
 
 st.write("Outside the form")
 
-st.write(name)
