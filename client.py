@@ -1,5 +1,4 @@
 import streamlit as st
-from streamlit_geolocation import streamlit_geolocation
 import js_eval
 
 
@@ -10,8 +9,6 @@ if 'watching' not in st.session_state:
         st.write("Watch succeeded")
     else:
         st.write("Watch failed")
-
-streamlit_geolocation()
 
 
 if 'location' not in st.session_state:
