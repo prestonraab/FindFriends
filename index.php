@@ -1,46 +1,54 @@
-<?php
-// Function to check if we are using HTTPS
-function is_https() {
-    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
-        return true;
-    }
-    if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-        return true;
-    }
-    if (!empty($_SERVER['HTTP_CF_VISITOR'])) {
-        $cfVisitor = json_decode($_SERVER['HTTP_CF_VISITOR'], true);
-        if ($cfVisitor && isset($cfVisitor['scheme']) && $cfVisitor['scheme'] === 'https') {
-            return true;
-        }
-    }
-    return false;
-}
-
-// Redirect to HTTPS if not already using it
-if (!is_https()) {
-    $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    header('HTTP/1.1 301 Moved Permanently');
-    header('Location: ' . $redirect);
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple HTTPS Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocation with Leaflet</title>
+    <?php include 'header.php'; ?>
+    <link rel="icon" href="https://whisperconnection.com/favicon.ico" type="image/x-icon">
+    <style>
+        #map {
+            width: 600px;
+            height: 400px;
+        }
+        .hidden {
+            display: none;
+        }
+        .login-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <p>This is a simple HTTPS test page.</p>
-
-    <?php
-    if (is_https()) {
-        echo "<p>You are using a secure connection (HTTPS).</p>";
-    } else {
-        echo "<p>You are not using a secure connection (HTTP).</p>";
-    }
-    ?>
+    <?php if (isset($_SESSION['token'])): ?>
+        <a href="logout.php" class="login-btn">Logout</a>
+    <?php else: ?>
+        <a href="login.php" class="login-btn">Login</a>
+    <?php endif; ?>
+    <div id="container">
+        <div id="location"></div>
+        <div id="nonSecureMessage" class="hidden">Geolocation services are not available on non-secure connections.</div>
+        <button id="fetchLocation">Fetch Current Location</button>
+        <button id="toggleUpdates">Start Continuous Updates</button>
+        <div id="map">Map will appear here</div>
+    </div>
+    <?php include 'footer.php'; ?>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <?php include 'map.php'; ?>
 </body>
 </html>
