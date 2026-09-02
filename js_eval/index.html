@@ -1,145 +1,180 @@
-<html>
+<!doctype html>
+<html lang="en">
   <body>
     <script>
-      // https://stackoverflow.com/questions/11042212/ff-13-ie-9-json-stringify-geolocation-object
-      // Define a global variable to store the latest location
       let latestLocation = null;
+      let locationWatchId = null;
+      let lastCommand = '';
 
-      // Function to get the current location
-      function getLocation() {
-          return new Promise((resolve, reject) => {
-              if (navigator.geolocation) {
-                  navigator.geolocation.getCurrentPosition(
-                      (position) => {
-                          resolve({
-                              coords: {
-                                  accuracy: position.coords.accuracy,
-                                  altitude: position.coords.altitude,
-                                  altitudeAccuracy: position.coords.altitudeAccuracy,
-                                  heading: position.coords.heading,
-                                  latitude: position.coords.latitude,
-                                  longitude: position.coords.longitude,
-                                  speed: position.coords.speed,
-                              },
-                              timestamp: position.timestamp,
-                          });
-                      },
-                      (error) => {
-                          reject(error);
-                      }
-                  );
-              } else {
-                  reject(new Error('Browser does not support geolocation!'));
-              }
-          });
+      function locationData(position) {
+        return {
+          coords: {
+            accuracy: position.coords.accuracy,
+            altitude: position.coords.altitude,
+            altitudeAccuracy: position.coords.altitudeAccuracy,
+            heading: position.coords.heading,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            speed: position.coords.speed
+          },
+          timestamp: position.timestamp
+        };
       }
 
-      // Function to start watching the location
+      function getLocation() {
+        return new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error('Browser does not support geolocation.'));
+            return;
+          }
+          navigator.geolocation.getCurrentPosition(
+            position => resolve(locationData(position)),
+            reject,
+            { enableHighAccuracy: true, maximumAge: 30000, timeout: 10000 }
+          );
+        });
+      }
+
       function startWatchingLocation() {
         if (!navigator.geolocation) {
-            console.error('Browser does not support geolocation!');
-            return;
+          return null;
         }
-
-        // Start watching the location
-        return navigator.geolocation.watchPosition(
-                (position) => {
-                  // Update the global variable with the latest position
-                  latestLocation = {
-                    coords: {
-                      accuracy: position.coords.accuracy,
-                      altitude: position.coords.altitude,
-                      altitudeAccuracy: position.coords.altitudeAccuracy,
-                      heading: position.coords.heading,
-                      latitude: position.coords.latitude,
-                      longitude: position.coords.longitude,
-                      speed: position.coords.speed,
-                    },
-                    timestamp: position.timestamp,
-                  };
-                  console.log('Location updated:', latestLocation);
-                },
-                (error) => {
-                  console.error('Error watching position:', error);
-                }
+        if (locationWatchId !== null) {
+          return locationWatchId;
+        }
+        locationWatchId = navigator.geolocation.watchPosition(
+          position => { latestLocation = locationData(position); },
+          error => { console.error('Error watching position:', error.message); },
+          { enableHighAccuracy: true, maximumAge: 30000, timeout: 10000 }
         );
+        return locationWatchId;
       }
 
-      // Function to get the most recent location
-      function getLatestLocation() {
-          if (latestLocation) {
-              return latestLocation;
-          } else {
-              console.warn('No location available yet.');
-              return null;
+      function getCookie(name) {
+        const prefix = `${encodeURIComponent(name)}=`;
+        const cookie = document.cookie.split('; ').find(item => item.startsWith(prefix));
+        return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+      }
+
+      function setCookie(name, value, durationDays) {
+        const maxAge = Math.max(0, Number(durationDays) * 86400);
+        document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; Max-Age=${maxAge}; Path=/; SameSite=Lax`;
+        return true;
+      }
+
+      function pageLocation() {
+        return {
+          href: window.location.href,
+          origin: window.location.origin,
+          protocol: window.location.protocol,
+          host: window.location.host,
+          pathname: window.location.pathname,
+          search: window.location.search,
+          hash: window.location.hash
+        };
+      }
+
+      function addActionElement(tagName, text, onClick) {
+        const element = document.createElement(tagName);
+        element.textContent = text;
+        element.addEventListener('click', onClick);
+        document.body.appendChild(element);
+        setFrameHeight(document.documentElement.scrollHeight);
+        return element;
+      }
+
+      async function executeCommand(command, args) {
+        switch (command) {
+          case 'set_cookie':
+            return setCookie(args.name, args.value, args.duration_days);
+          case 'get_cookie':
+            return getCookie(args.name);
+          case 'get_user_agent':
+            return window.navigator.userAgent;
+          case 'get_browser_language':
+            return window.navigator.language;
+          case 'get_page_location':
+            return pageLocation();
+          case 'get_location':
+            return getLocation();
+          case 'start_watching_location':
+            return startWatchingLocation();
+          case 'get_latest_location':
+            return latestLocation;
+          case 'button':
+            addActionElement('button', args.title, () => {});
+            return true;
+          case 'copy_to_clipboard': {
+            const link = addActionElement('button', args.link_text, async () => {
+              await navigator.clipboard.writeText(args.copied_text);
+              link.textContent = args.success_text;
+            });
+            return true;
           }
+          case 'share': {
+            const link = addActionElement('button', args.link_text, async () => {
+              if (!navigator.share) {
+                return;
+              }
+              await navigator.share(args.share_data);
+              link.textContent = args.success_text;
+            });
+            return true;
+          }
+          default:
+            throw new Error('Unsupported component command.');
+        }
       }
 
-
-
-      // ----------------------------------------------------
-      // Just copy/paste these functions as-is:
+      const parentOrigin = document.referrer ? new URL(document.referrer).origin : window.location.origin;
 
       function sendMessageToStreamlitClient(type, data) {
-        var outData = Object.assign({
+        window.parent.postMessage({
           isStreamlitMessage: true,
-          type: type,
-        }, data);
-        window.parent.postMessage(outData, "*");
-      }
-
-      function init() {
-        sendMessageToStreamlitClient("streamlit:componentReady", {apiVersion: 1});
+          type,
+          ...(data || {})
+        }, parentOrigin);
       }
 
       function setFrameHeight(height) {
-        sendMessageToStreamlitClient("streamlit:setFrameHeight", {height: height});
+        sendMessageToStreamlitClient('streamlit:setFrameHeight', { height });
       }
 
-      // The `data` argument can be any JSON-serializable value.
-      function sendDataToPython(data) {
-        sendMessageToStreamlitClient("streamlit:setComponentValue", data);
+      function sendDataToPython(value) {
+        sendMessageToStreamlitClient('streamlit:setComponentValue', value);
       }
 
-
-      // ----------------------------------------------------
-      // Now modify this part of the code to fit your needs:
-
-      var data_from_streamlit = ""
-      // data is any JSON-serializable value you sent from Python,
-      // and it's already deserialized for you.
       function onDataFromPython(event) {
-        if (event.data.type !== "streamlit:render") return;
-        new_value = event.data.args.js_expressions;  // Access values sent from Python here!
-        if (new_value !== data_from_streamlit)
-        {
-          data_from_streamlit = new_value
-          want_output = event.data.args.hasOwnProperty('want_output') ? event.data.args.want_output : true
-          console.log("Evaluating: "+data_from_streamlit)
-          result = eval(data_from_streamlit)
-          ret_val = want_output ? result : 'No output requested'
-          if(want_output) Promise.resolve(ret_val).then(function(value) {
-            console.log('Outputting '+value)
-            sendDataToPython({value: value, dataType: "json"});
-          })
+        if (event.source !== window.parent || event.origin !== parentOrigin) {
+          return;
+        }
+        if (!event.data || event.data.type !== 'streamlit:render') {
+          return;
+        }
 
+        try {
+          const payload = JSON.parse(event.data.args.js_expressions);
+          if (!payload || typeof payload.command !== 'string') {
+            throw new Error('Invalid component payload.');
+          }
+          const commandKey = JSON.stringify(payload);
+          if (commandKey === lastCommand) {
+            return;
+          }
+          lastCommand = commandKey;
+          Promise.resolve(executeCommand(payload.command, payload.args || {}))
+            .then(sendDataToPython)
+            .catch(error => sendDataToPython({ error: error.message }));
+        } catch (error) {
+          sendDataToPython({ error: 'Invalid component request.' });
         }
       }
 
-      // Hack to autoset the iframe height.
-      window.addEventListener("load", function() {
-        // Hook things up!
-        window.addEventListener("message", onDataFromPython);
-        init();
-        window.setTimeout(function() {
-          setFrameHeight(document.documentElement.clientHeight) //
-        }, 0);
+      window.addEventListener('message', onDataFromPython);
+      window.addEventListener('load', () => {
+        sendMessageToStreamlitClient('streamlit:componentReady', { apiVersion: 1 });
+        window.setTimeout(() => setFrameHeight(document.documentElement.scrollHeight), 0);
       });
-
-      // Optionally, if the automatic height computation fails you, give this component a height manually
-      // by commenting out below:
-      //setFrameHeight(0);
     </script>
-
   </body>
 </html>

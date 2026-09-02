@@ -1,25 +1,15 @@
 <?php
-// Start the session
-session_start();
 
-// Unset all of the session variables
-$_SESSION = [];
+require_once __DIR__ . '/bootstrap.php';
+app_bootstrap();
 
-// Destroy the session
-session_destroy();
-
-// Optional: Destroy the session cookie
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], 
-        $params["domain"], 
-        true, // Ensure cookie is only sent over HTTPS
-        $params["httponly"]
-    );
+$csrfToken = is_string($_POST['csrf_token'] ?? null) ? $_POST['csrf_token'] : null;
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST' || !app_verify_csrf_token($csrfToken)) {
+    http_response_code(($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' ? 403 : 405);
+    header('Allow: POST');
+    exit('Invalid logout request.');
 }
 
-// Redirect to a secure page
-header("Location: https://whisperconnection.com/index.php");
+app_destroy_session();
+header('Location: index.php', true, 303);
 exit;
-?>

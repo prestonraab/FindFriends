@@ -1,2 +1,2 @@
-geocoder
-streamlit-geolocation
+geocoder==1.38.1
+streamlit-geolocation==0.0.10
